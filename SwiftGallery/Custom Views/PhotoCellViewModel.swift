@@ -8,13 +8,16 @@
 import Foundation
 
 class PhotoCellViewModel {
+    // MARK: - Properties
     let photoURL: URL
     var imageData: Data?
     
+    // MARK: - Initialization
     init(photoURL: URL) {
         self.photoURL = photoURL
     }
     
+    // MARK: - Image Loading
     func loadImage(completion: @escaping (Data?) -> Void) {
         if let cachedImageData = imageData {
             completion(cachedImageData)
@@ -32,5 +35,3 @@ class PhotoCellViewModel {
         }.resume()
     }
 }
-
-

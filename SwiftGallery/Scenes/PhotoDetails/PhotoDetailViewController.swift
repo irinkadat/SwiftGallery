@@ -8,12 +8,14 @@
 import UIKit
 
 class PhotoDetailViewController: UIViewController {
+    // MARK: - Properties
     var viewModel: PhotoDetailViewModel
     var selectedPhotoIndex: Int
     
     private var dataSource: UICollectionViewDiffableDataSource<Int, URL>!
     private var collectionView: UICollectionView!
     
+    // MARK: - Initialization
     init(photoURLs: [URL], selectedPhotoIndex: Int) {
         self.viewModel = PhotoDetailViewModel(photoURLs: photoURLs, selectedPhotoIndex: selectedPhotoIndex)
         self.selectedPhotoIndex = selectedPhotoIndex
@@ -24,6 +26,7 @@ class PhotoDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
@@ -31,6 +34,7 @@ class PhotoDetailViewController: UIViewController {
         scrollToSelectedPhoto()
     }
     
+    // MARK: - Setup
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -52,6 +56,7 @@ class PhotoDetailViewController: UIViewController {
         ])
     }
     
+    // MARK: - Data Source Configuration
     private func configureDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Int, URL>(collectionView: collectionView) { collectionView, indexPath, photoURL in
             let photoCellViewModel = PhotoCellViewModel(photoURL: photoURL)
@@ -66,13 +71,9 @@ class PhotoDetailViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
+    // MARK: - Scrolling
     private func scrollToSelectedPhoto() {
         collectionView.layoutIfNeeded()
         collectionView.scrollToItem(at: IndexPath(item: selectedPhotoIndex, section: 0), at: .centeredHorizontally, animated: false)
     }
 }
-
-
-
-
-

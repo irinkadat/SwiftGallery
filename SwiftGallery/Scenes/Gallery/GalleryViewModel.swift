@@ -9,12 +9,14 @@ import Foundation
 import UnsplashAPI
 
 protocol GalleryViewModelDelegate: AnyObject {
+    // MARK: - Methods
     func photosFetched()
     func didUpdateSnapshot(_ snapshot: DiffableSnapshot<Int, URL>)
     func didSelectPhoto(with photoURL: URL)
 }
 
 class GalleryViewModel {
+    // MARK: - Properties
     weak var delegate: GalleryViewModelDelegate?
     private(set) var photoURLs: [URL] = []
     
@@ -22,6 +24,7 @@ class GalleryViewModel {
         return photoURLs.count
     }
     
+    // MARK: - Fetching Photos
     func fetchPhotos() {
         let unSplashAPI = UnsplashAPI(apiKey: "_9w7vKs408HsVOqtAQqEzJa06tkv-jwqE068hoHYKqk")
         unSplashAPI.fetchPhotos(page: 1, perPage: 150) { photos, error in
@@ -37,11 +40,14 @@ class GalleryViewModel {
         }
     }
     
+    // MARK: - Selection
     func didSelectPhoto(with photoURL: URL) {
         delegate?.didSelectPhoto(with: photoURL)
     }
     
+    // MARK: - Accessing Photo URLs
     func photoURL(at indexPath: IndexPath) -> URL {
         return photoURLs[indexPath.item]
     }
 }
+

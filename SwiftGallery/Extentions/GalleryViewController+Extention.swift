@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension GalleryViewController: GalleryViewModelDelegate {
-    
+    // MARK: - Gallery View Model Delegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedPhotoURL = viewModel.photoURL(at: indexPath)
         viewModel.didSelectPhoto(with: selectedPhotoURL)

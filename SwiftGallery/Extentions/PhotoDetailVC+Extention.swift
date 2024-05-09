@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 extension PhotoDetailViewController: UICollectionViewDataSource {
+    // MARK: - Collection View Data Source
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.photoCount
     }
@@ -22,8 +23,8 @@ extension PhotoDetailViewController: UICollectionViewDataSource {
     }
 }
 
-
 extension PhotoDetailViewController: UICollectionViewDelegateFlowLayout {
+    // MARK: - Collection View Flow Layout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.bounds.size
     }

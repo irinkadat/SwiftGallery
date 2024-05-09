@@ -8,8 +8,11 @@
 import UIKit
 
 class PhotoCell: UICollectionViewCell {
+    // MARK: - Properties
     static let reuseIdentifier = "PhotoCell"
+    private var viewModel: PhotoCellViewModel?
     
+    // MARK: - UI Components
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -17,8 +20,7 @@ class PhotoCell: UICollectionViewCell {
         return imageView
     }()
     
-    private var viewModel: PhotoCellViewModel?
-    
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -29,6 +31,7 @@ class PhotoCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Setup
     private func setupConstraints() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -39,6 +42,7 @@ class PhotoCell: UICollectionViewCell {
         ])
     }
     
+    // MARK: - Configuration
     func configure(with viewModel: PhotoCellViewModel) {
         self.viewModel = viewModel
         self.imageView.image = nil
@@ -52,6 +56,3 @@ class PhotoCell: UICollectionViewCell {
         }
     }
 }
-
-
-

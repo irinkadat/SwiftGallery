@@ -8,9 +8,11 @@
 import UIKit
 
 class GalleryViewController: UICollectionViewController {
+    // MARK: - Properties
     private(set) var viewModel: GalleryViewModel!
     private(set) var dataSource: UICollectionViewDiffableDataSource<Int, URL>!
     
+    // MARK: - Initialization
     init() {
         let layout = UICollectionViewFlowLayout()
         super.init(collectionViewLayout: layout)
@@ -20,6 +22,7 @@ class GalleryViewController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -27,6 +30,7 @@ class GalleryViewController: UICollectionViewController {
         setupDataSource()
     }
     
+    // MARK: - Setup
     private func setupUI() {
         title = "გალერეა"
         navigationController?.navigationBar.titleTextAttributes = [
@@ -65,10 +69,4 @@ class GalleryViewController: UICollectionViewController {
             return cell
         }
     }
-    
 }
-
-
-
-
-
