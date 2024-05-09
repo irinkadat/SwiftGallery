@@ -1,0 +1,15 @@
+{
+  "originHash" : "0a4073e88599638d7a518e69fb7a3deafec3328c4988a7e762d1d99df5eac86a",
+  "pins" : [
+    {
+      "identity" : "unsplashapi",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/irinkadat/UnsplashAPI",
+      "state" : {
+        "branch" : "main",
+        "revision" : "44e0040b420b6e5118e249d487f05c9130a139b5"
+      }
+    }
+  ],
+  "version" : 3
+}

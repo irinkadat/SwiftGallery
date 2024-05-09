@@ -8,22 +8,84 @@
 import UIKit
 
 class PhotoDetailViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    var viewModel: PhotoDetailViewModel
+    var selectedPhotoIndex: Int
+    
+    private var dataSource: UICollectionViewDiffableDataSource<Int, URL>!
+    private var collectionView: UICollectionView!
+    
+    init(photoURLs: [URL], selectedPhotoIndex: Int) {
+        self.viewModel = PhotoDetailViewModel(photoURLs: photoURLs, selectedPhotoIndex: selectedPhotoIndex)
+        self.selectedPhotoIndex = selectedPhotoIndex
+        super.init(nibName: nil, bundle: nil)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-    */
-
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupCollectionView()
+        configureDataSource()
+        scrollToSelectedPhoto()
+    }
+    
+    private func setupCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.isPagingEnabled = true
+        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.reuseIdentifier)
+        view.addSubview(collectionView)
+        
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    private func configureDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<Int, URL>(collectionView: collectionView) { collectionView, indexPath, photoURL in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseIdentifier, for: indexPath) as! PhotoCell
+            cell.configure(with: photoURL)
+            return cell
+        }
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Int, URL>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(viewModel.photoURLs)
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func scrollToSelectedPhoto() {
+        collectionView.scrollToItem(at: IndexPath(item: selectedPhotoIndex, section: 0), at: .centeredHorizontally, animated: false)
+    }
 }
+
+extension PhotoDetailViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.bounds.size
+    }
+}
+
+extension PhotoDetailViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.photoCount
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseIdentifier, for: indexPath) as! PhotoCell
+        let photoURL = viewModel.photoURLs[indexPath.item]
+        cell.configure(with: photoURL)
+        return cell
+    }
+}
+
