@@ -19,11 +19,6 @@ class PhotoDetailViewModel {
         self.photoURLs = photoURLs
         self.selectedPhotoIndex = selectedPhotoIndex
     }
-    
-    func loadSelectedPhoto() -> URL? {
-        guard selectedPhotoIndex >= 0 && selectedPhotoIndex < photoURLs.count else { return nil }
-        return photoURLs[selectedPhotoIndex]
-    }
 }
 
 

@@ -8,8 +8,8 @@
 import UIKit
 
 class GalleryViewController: UICollectionViewController {
-    private var viewModel: GalleryViewModel!
-    private var dataSource: UICollectionViewDiffableDataSource<Int, URL>!
+    private(set) var viewModel: GalleryViewModel!
+    private(set) var dataSource: UICollectionViewDiffableDataSource<Int, URL>!
     
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -28,7 +28,12 @@ class GalleryViewController: UICollectionViewController {
     }
     
     private func setupUI() {
-        title = "Gallery"
+        title = "გალერეა"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont(name: "FiraGO-Medium", size: 32) ?? UIFont.systemFont(ofSize: 32, weight: .bold),
+            NSAttributedString.Key.foregroundColor: UIColor(red: 60/255, green: 121/255, blue: 241/255, alpha: 1.0)
+        ]
+        
         collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.reuseIdentifier)
         collectionView.collectionViewLayout = createLayout()
     }
@@ -53,47 +58,16 @@ class GalleryViewController: UICollectionViewController {
     
     private func setupDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Int, URL>(collectionView: collectionView) { (collectionView, indexPath, photoURL) -> UICollectionViewCell? in
+            let photoCellViewModel = PhotoCellViewModel(photoURL: photoURL)
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseIdentifier, for: indexPath) as! PhotoCell
-            cell.configure(with: photoURL)
+            cell.configure(with: photoCellViewModel)
+            
             return cell
         }
     }
+    
 }
 
-extension GalleryViewController: GalleryViewModelDelegate {
-    
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedPhotoURL = viewModel.photoURL(at: indexPath)
-        viewModel.didSelectPhoto(with: selectedPhotoURL)
-    }
-    
-    func didUpdateSnapshot(_ snapshot: DiffableSnapshot<Int, URL>) {
-        var nsSnapshot = NSDiffableDataSourceSnapshot<Int, URL>()
-        for section in snapshot.sections {
-            nsSnapshot.appendSections([section.identifier])
-            nsSnapshot.appendItems(section.items, toSection: section.identifier)
-        }
-        dataSource.apply(nsSnapshot, animatingDifferences: true)
-    }
-    
-    func didSelectPhoto(with photoURL: URL) {
-        guard let selectedPhotoIndex = viewModel.photoURLs.firstIndex(of: photoURL) else {
-            return
-        }
-        let photoDetailVC = PhotoDetailViewController(photoURLs: viewModel.photoURLs, selectedPhotoIndex: selectedPhotoIndex)
-        
-        // kai ramea smooth transitionistvis
-        UIView.transition(with: navigationController!.view, duration: 0.5, options: .transitionCrossDissolve, animations: {
-            self.navigationController?.pushViewController(photoDetailVC, animated: false)
-        }, completion: nil)
-    }
-    
-    func photosFetched() {
-        var snapshot = DiffableSnapshot<Int, URL>()
-        snapshot.appendSection(DiffableSnapshot.Section(identifier: 0, items: viewModel.photoURLs))
-        didUpdateSnapshot(snapshot)
-    }
-}
 
 
 

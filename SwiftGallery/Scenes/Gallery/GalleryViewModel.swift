@@ -18,6 +18,10 @@ class GalleryViewModel {
     weak var delegate: GalleryViewModelDelegate?
     private(set) var photoURLs: [URL] = []
     
+    var numberOfPhotos: Int {
+        return photoURLs.count
+    }
+    
     func fetchPhotos() {
         let unSplashAPI = UnsplashAPI(apiKey: "_9w7vKs408HsVOqtAQqEzJa06tkv-jwqE068hoHYKqk")
         unSplashAPI.fetchPhotos(page: 1, perPage: 150) { photos, error in
@@ -35,10 +39,6 @@ class GalleryViewModel {
     
     func didSelectPhoto(with photoURL: URL) {
         delegate?.didSelectPhoto(with: photoURL)
-    }
-    
-    var numberOfPhotos: Int {
-        return photoURLs.count
     }
     
     func photoURL(at indexPath: IndexPath) -> URL {

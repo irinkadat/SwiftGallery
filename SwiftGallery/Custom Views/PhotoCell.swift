@@ -17,6 +17,8 @@ class PhotoCell: UICollectionViewCell {
         return imageView
     }()
     
+    private var viewModel: PhotoCellViewModel?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -37,14 +39,19 @@ class PhotoCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with photoURL: URL) {
-        URLSession.shared.dataTask(with: photoURL) { [weak self] (data, _, _) in
-            guard let data = data, let image = UIImage(data: data) else { return }
-            DispatchQueue.main.async {
-                self?.imageView.image = image
+    func configure(with viewModel: PhotoCellViewModel) {
+        self.viewModel = viewModel
+        self.imageView.image = nil
+        
+        viewModel.loadImage { [weak self] imageData in
+            if let imageData = imageData, let image = UIImage(data: imageData) {
+                DispatchQueue.main.async {
+                    self?.imageView.image = image
+                }
             }
-        }.resume()
+        }
     }
 }
+
 
 

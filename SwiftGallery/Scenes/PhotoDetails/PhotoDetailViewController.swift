@@ -54,8 +54,9 @@ class PhotoDetailViewController: UIViewController {
     
     private func configureDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Int, URL>(collectionView: collectionView) { collectionView, indexPath, photoURL in
+            let photoCellViewModel = PhotoCellViewModel(photoURL: photoURL)
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseIdentifier, for: indexPath) as! PhotoCell
-            cell.configure(with: photoURL)
+            cell.configure(with: photoCellViewModel)
             return cell
         }
         
@@ -66,26 +67,12 @@ class PhotoDetailViewController: UIViewController {
     }
     
     private func scrollToSelectedPhoto() {
+        collectionView.layoutIfNeeded()
         collectionView.scrollToItem(at: IndexPath(item: selectedPhotoIndex, section: 0), at: .centeredHorizontally, animated: false)
     }
 }
 
-extension PhotoDetailViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return collectionView.bounds.size
-    }
-}
 
-extension PhotoDetailViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.photoCount
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseIdentifier, for: indexPath) as! PhotoCell
-        let photoURL = viewModel.photoURLs[indexPath.item]
-        cell.configure(with: photoURL)
-        return cell
-    }
-}
+
+
 
